@@ -6,9 +6,11 @@ Created on Sat Jun 29 21:43:32 2019
 """
 
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
+from socket import gethostbyname, gethostname
+
 import stage_controller
 
-HOST = '127.0.0.1'
+HOST = gethostbyname(gethostname())  # '127.0.0.1'
 PORT = 5000
 
 
@@ -45,17 +47,15 @@ def run_by_tcpip(controller):
                     if not data:
                         break
                     print('data : {}, addr: {}'.format(data, addr))
-                    try:
-                        res = controller.send_command(command=data.decode())
-                    except TypeError:
-                        controller = stage_controller.StageController()
-                        res = controller.send_command(command=data.decode())
-
+                    # send the command data.
+                    res = controller.send_command(command=data.decode())
                     # return the data to client (b -> byte is needed)
                     conn.sendall(', '.join(res).encode())
+
 
 
 if __name__ == '__main__':
     controller = stage_controller.StageController()
     # run_by_udp(controller)
+    print("IP Adress of HOST: %s" % HOST)
     run_by_tcpip(controller)

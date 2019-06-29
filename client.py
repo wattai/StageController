@@ -7,9 +7,8 @@ Created on Sat Jun 29 21:45:56 2019
 
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
 
-HOST = '127.0.0.1'
+HOST = "127.0.0.1"  # address to send.
 PORT = 5000
-ADDRESS = "127.0.0.1"  # address to send.
 
 
 def run_by_udp():
@@ -19,12 +18,12 @@ def run_by_udp():
         while True:
             msg = input("> ")
             # receive message.
-            s.sendto(msg.encode(), (ADDRESS, PORT))
+            s.sendto(msg.encode(), (HOST, PORT))
 
 
 def run_by_tcpip():
     with socket(AF_INET, SOCK_STREAM) as s:
-        # set server.
+        # establish the connection.
         s.connect((HOST, PORT))
         while True:
             msg = input("> ")

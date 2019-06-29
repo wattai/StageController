@@ -65,7 +65,6 @@ class StageController:
 
 
 if __name__ == '__main__':
-
     controller = StageController(port='COM3')
     # command = ["M:4+P144000", "G:"]
     command = ["H:W"]
