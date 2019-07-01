@@ -52,9 +52,7 @@ def run_by_tcpip(controller):
                     conn.sendall(', '.join(res).encode())
 
 
-
 if __name__ == '__main__':
     controller = stage_controller.StageController()
     # run_by_udp(controller)
-    print("IP Adress of HOST: %s" % HOST)
     run_by_tcpip(controller)
