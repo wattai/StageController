@@ -6,11 +6,10 @@ Created on Sat Jun 29 21:43:32 2019
 """
 
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
-from socket import gethostbyname, gethostname
 
 import stage_controller
 
-HOST = gethostbyname(gethostname())  # '127.0.0.1'
+HOST = '0.0.0.0'
 PORT = 5000
 
 
