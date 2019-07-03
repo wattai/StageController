@@ -48,7 +48,7 @@ class StageController:
             data = bytes(c.encode('utf-8')) + self.return_code
             s.write(data)
             print("command: %s" % c)
-            res = s.readline().decode()
+            res = s.readline().decode().rstrip(self.return_code.decode())
             res_list.append(res)
             print("response: %s" % res)
         return res_list

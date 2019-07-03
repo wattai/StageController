@@ -7,7 +7,7 @@ Created on Sat Jun 29 21:45:56 2019
 
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
 
-HOST = "192.168.56.1"  # address to send.
+HOST = "127.0.0.1"  # address to send.
 PORT = 5000
 exitwords = ['quit', 'exit']
 

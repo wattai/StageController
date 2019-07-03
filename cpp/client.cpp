@@ -1,57 +1,65 @@
-//Windows VC++ での　TCP/IP サンプルプログラム（ここからはクライアント）
-//入力されたデータをクライアントに送り，もらったデータを表示する
-//サーバープログラムを実行してからクライアントプログラムを実行して下さい
+// TCP/IP client for XYZ-Rotation controller
 
 #include <stdio.h>
+#include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#pragma comment(lib, "Ws2_32.lib")
 
-#define PORT 5000 //サーバープログラムとポート番号を合わせてください
+#define PORT 5000 // port number
 
 int main() {
-	// IP アドレス，ポート番号，ソケット，sockaddr_in 構造体
+	// IP address，port number，socket，constructor: sockaddr_in 
 	char destination[32];
 	int dstSocket;
 	struct sockaddr_in dstAddr;
 
-	// 各種パラメータ
+	// parameters
 	char buffer[1024];
 
-	// Windows の場合
+	// for windows
 	WSADATA data;
-	WSAStartup(MAKEWORD(2,0), &data);
+	WSAStartup(MAKEWORD(2, 0), &data);
 
-	// 相手先アドレスの入力と送る文字の入力
-	printf("サーバーマシンのIPは？:");
-	scanf("%s", destination);
+	// enter IP address to send
+	printf("Please enter IP address of server: ");
+	// enter command
+	scanf_s("%s", destination, 32);
 
-	// sockaddr_in 構造体のセット
+	// set constructor: sockaddr_in 
 	memset(&dstAddr, 0, sizeof(dstAddr));
 	dstAddr.sin_port = htons(PORT);
 	dstAddr.sin_family = AF_INET;
-	dstAddr.sin_addr.s_addr = inet_addr(destination);
+	InetPtonA(dstAddr.sin_family, destination, &dstAddr.sin_addr.s_addr);
 
-	// ソケットの生成
+	// generate socket
 	dstSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-	//接続
-	if(connect(dstSocket, (struct sockaddr *) &dstAddr, sizeof(dstAddr))){
-		printf("%s　に接続できませんでした\n",destination);
+	// make connection
+	if (connect(dstSocket, (struct sockaddr*) & dstAddr, sizeof(dstAddr))) {
+		printf("I could not connect with: %s\n", destination);
 		return(-1);
 	}
-  	printf("%s に接続しました\n", destination);
-  	printf("適当なアルファベットを入力してください\n");
+	printf("I connected with %s\n", destination);
+	printf("Please enter your command here: \n");
 
-	while (1){
-		scanf("%s",buffer);
-		//パケットの送信
-		send(dstSocket, buffer, 1024, 0);
-		//パケットの受信
+	while (1) {
+		scanf_s("%s", buffer, 1024);
+		if (!strcmp(buffer, "quit") || !strcmp(buffer, "exit")) {
+			break;
+		}
+		// send packet
+		send(dstSocket, buffer, strlen(buffer), 0);
+
+		// initialize memory
+		memset(buffer, 0, sizeof(buffer));
+
+		// receive packet
 		recv(dstSocket, buffer, 1024, 0);
-		printf("→ %s\n\n",buffer);
+		printf("response: %s\n\n", buffer);
 	}
 
-	// Windows でのソケットの終了
+	// close socket on this device
 	closesocket(dstSocket);
 	WSACleanup();
 	return(0);
